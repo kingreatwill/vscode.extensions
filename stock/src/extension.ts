@@ -78,8 +78,7 @@ function getStockInfo(stockCode:string, callback:any) {
 	let t = setInterval(() => {
 		let isAllFinish = true;
 		instance.get(`http://hq.sinajs.cn/list=${stockCode}`)
-          .then((response) => {
-				console.log(response.data);
+          .then((response) => {				
 				const data =response.data;
 				const dataArr = data.split('="');
 				if (dataArr.length > 1) {
@@ -90,7 +89,10 @@ function getStockInfo(stockCode:string, callback:any) {
 						const price = dataArr1[3];
 						const rate = Math.round((price - endPrice) / endPrice * 10000) / 100;
 						isAllFinish = false;
-						callback(stockCode, `${parseFloat(price)}  ${rate}`);
+						// (12.235).toFixed(2)四舍五入						
+						const text = `${parseFloat(price).toFixed(2)}  ${rate.toFixed(2)}`;
+						console.log(text);
+						callback(stockCode, text);
 					}
 				}
 				if (isAllFinish) {
