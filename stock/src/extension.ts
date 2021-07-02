@@ -6,28 +6,31 @@ import * as vscode from 'vscode';
 import axios from 'axios';
 
 let codeMap = new Map<string, string>();
-
+let timerMap = new Map<string, NodeJS.Timeout>();
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {	
-	const codes = vscode.workspace.getConfiguration().get<string>("codes");
+	
+	
 	let color = vscode.workspace.getConfiguration().get<string>("color");
-	if (!codes) {
-		return;
-	}
 	if (!color) {
 		color = "";
 	}
-	codes.split(",").forEach((code: string, index: number, array: Array<string>) => {
-		codeMap.set(code, code);
-	});
-
 	const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 200);
 	statusBarItem.command = 'extension.stock.off';
 	statusBarItem.tooltip = '';
 	statusBarItem.color = color;//"#41464b";
 	context.subscriptions.push(vscode.commands.registerCommand('extension.stock', () => {
-		
+		const codes = vscode.workspace.getConfiguration().get<string>("codes");
+		if (!codes) {
+			return;
+		}
+		// 清空;
+		codeMap.clear();
+		timerMap.clear();
+		codes.split(",").forEach((code: string, index: number, array: Array<string>) => {
+			codeMap.set(code, code);
+		});
 		statusBarItem.show();
 		statusBarItem.text = "loding...";
 		codeMap.forEach((value, key) => { 
@@ -65,8 +68,6 @@ function tostr(obj: Map<string, string>) {
 }
 
 
-
-let timerMap = new Map<string, NodeJS.Timeout>();
 
 function getStockInfo(stockCode:string, callback:any) {
 	const instance = axios.create();
