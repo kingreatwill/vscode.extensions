@@ -44,6 +44,7 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(vscode.commands.registerCommand('extension.stock.off', () => {
 		clearIntervalTimer();
 		statusBarItem.text = '';
+		statusBarItem.hide();
 		// exec(`open 'http://quote.eastmoney.com/'`);
 	}));
 
