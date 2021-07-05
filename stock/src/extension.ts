@@ -121,5 +121,8 @@ function clearIntervalTimer() {
 			clearInterval(t);
 		}
 	});
+	// 清空;
+	codeMap.clear();
+	timerMap.clear();
 }
 
